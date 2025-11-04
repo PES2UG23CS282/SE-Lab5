@@ -5,11 +5,17 @@ from datetime import datetime
 # Global variable
 stock_data = {}
 
-def addItem(item="default", qty=0, logs=[]):
-    if not item:
-        return
+
+def addItem(item, qty, logs=[]):
+    # Add this validation check
+    if not isinstance(qty, int):
+        print(f"Error: Quantity '{qty}' is not a valid number. Item '{item}' not added.")
+        return  # Stop the function here
+
+    # This code below will now only run if qty is a valid integer
     stock_data[item] = stock_data.get(item, 0) + qty
-    logs.append("%s: Added %d of %s" % (str(datetime.now()), qty, item))
+    logs.append(f"Added {qty} of {item}")
+    print(f"Added {qty} of {item}.")
 
 def removeItem(item, qty):
     try:
@@ -59,3 +65,4 @@ def main():
     eval("print('eval used')")  # dangerous
 
 main()
+
