@@ -10,9 +10,8 @@ import logging
 from datetime import datetime
 from ast import literal_eval
 
-# Use a constant for the default file path (Pylint likes constants)
+# Constants for default values
 DEFAULT_FILE_PATH = "inventory.json"
-# Use a constant for the low stock threshold
 DEFAULT_THRESHOLD = 5
 
 def add_item(item, qty, stock_data):
@@ -24,16 +23,12 @@ def add_item(item, qty, stock_data):
         qty (int): Quantity to add
         stock_data (dict): The dictionary holding stock information
     """
-    # This list was part of a bug; it's not used, so it's removed
-    # to avoid 'unused-argument' Pylint errors.
-
     if not isinstance(item, str) or not isinstance(qty, int):
         logging.error("Invalid data types for item or qty. Item not added.")
         return
 
     stock_data[item] = stock_data.get(item, 0) + qty
     
-    # Pylint prefers f-strings for logging
     log_time = datetime.now()
     logging.info(f"{log_time}: Added {qty} of {item}")
 
@@ -94,7 +89,6 @@ def load_data(file_path=DEFAULT_FILE_PATH):
         dict: Loaded stock data
     """
     try:
-        # Use a more descriptive variable name than 'f'
         with open(file_path, "r", encoding="utf-8") as infile:
             data = json.load(infile)
             logging.info(f"Data loaded from {file_path}")
@@ -116,7 +110,6 @@ def save_data(stock_data, file_path=DEFAULT_FILE_PATH):
         file_path (str): Path to the JSON file
     """
     try:
-        # Use a more descriptive variable name than 'f'
         with open(file_path, "w", encoding="utf-8") as outfile:
             json.dump(stock_data, outfile, indent=4)
             logging.info(f"Data saved to {file_path}")
@@ -127,8 +120,7 @@ def save_data(stock_data, file_path=DEFAULT_FILE_PATH):
 def print_data(stock_data):
     """
     Print the inventory report.
-    (Pylint may flag 'print', but it's the function's purpose.
-    For a perfect score, you might need to add a pylint-disable comment)
+    (Disabling Pylint's print warning as this is the function's purpose)
     """
     # pylint: disable=print-statement
     print("\n--- Items Report ---")
@@ -156,7 +148,7 @@ def check_low_items(stock_data, threshold=DEFAULT_THRESHOLD):
 def main():
     """Main function to run the inventory operations."""
     
-    # Configure logging inside main
+    # Configure logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s"
@@ -166,6 +158,7 @@ def main():
     if not stock_data:
         logging.info("No existing data found. Starting with empty inventory.")
 
+    # --- Calls updated to snake_case ---
     add_item("apple", 10, stock_data=stock_data)
     add_item("banana", 2, stock_data=stock_data)
     add_item("orange", 5, stock_data=stock_data)
@@ -178,19 +171,5 @@ def main():
 
     print_data(stock_data)
 
-    print(f"Apple stock: {get_qty('apple', stock_data)}")
-    
-    low_items = check_low_items(stock_data)
-    print(f"Low items: {low_items}")
-    logging.info(f"Low items: {low_items}")
-
-    save_data(stock_data)
-
-    # Instead of eval() - safe literal evaluation demonstration
-    expression = "'Safe eval substitute working'"
-    safe_output = literal_eval(expression)
-    print(safe_output)
-
-
-if __name__ == "__main__":
-    main()
+    # pylint: disable=print-statement
+    print(f"
