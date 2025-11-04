@@ -6,11 +6,29 @@ from datetime import datetime
 stock_data = {}
 
 
-def addItem(item, qty, logs=[]):
-    # Add this validation check
+# A global dictionary to store stock data
+stock_data = {}
+
+def addItem(item, qty, logs=None):
+    """
+    Adds a specified quantity of an item to the inventory.
+    Fixes:
+    1. Mutable default argument 'logs=[]' changed to 'logs=None'.
+    2. Added input validation to ensure 'qty' is an integer.
+    """
+    # [cite_start]Fix for mutable default argument 
+    if logs is None:
+        logs = []
+
+    # [cite_start]Fix for input validation [cite: 77]
     if not isinstance(qty, int):
         print(f"Error: Quantity '{qty}' is not a valid number. Item '{item}' not added.")
-        return  # Stop the function here
+        return  # Stop the function if qty is not an integer
+
+    # Original logic, now safe to run
+    stock_data[item] = stock_data.get(item, 0) + qty
+    logs.append(f"Added {qty} of {item}")
+    print(f"Added {qty} of {item}.")
 
     # This code below will now only run if qty is a valid integer
     stock_data[item] = stock_data.get(item, 0) + qty
@@ -65,4 +83,5 @@ def main():
     eval("print('eval used')")  # dangerous
 
 main()
+
 
