@@ -8,9 +8,9 @@ It supports adding, removing, saving, loading, and checking low stock items.
 import json
 import logging
 from datetime import datetime
-from ast import literal_eval
+from ast import literal_eval  # Safe alternative to eval()
 
-# Constants for default values
+# Constants for default values (Pylint likes constants)
 DEFAULT_FILE_PATH = "inventory.json"
 DEFAULT_THRESHOLD = 5
 
@@ -30,7 +30,7 @@ def add_item(item, qty, stock_data):
     stock_data[item] = stock_data.get(item, 0) + qty
     
     log_time = datetime.now()
-    logging.info(f"{log_time}: Added {qty} of {item}")
+    logging.info(f"{log_time}: Added {qty} of {item}") # Use f-string
 
 
 def remove_item(item, qty, stock_data):
@@ -46,8 +46,10 @@ def remove_item(item, qty, stock_data):
         logging.warning("Stock data not provided.")
         return
 
+    # Fix for 'bare-except'
     try:
         if item not in stock_data:
+            # Raise a specific error
             raise KeyError(f"Item '{item}' not in stock.")
             
         stock_data[item] -= qty
@@ -88,6 +90,7 @@ def load_data(file_path=DEFAULT_FILE_PATH):
     Returns:
         dict: Loaded stock data
     """
+    # Fix for 'consider-using-with' and 'unspecified-encoding'
     try:
         with open(file_path, "r", encoding="utf-8") as infile:
             data = json.load(infile)
@@ -109,6 +112,7 @@ def save_data(stock_data, file_path=DEFAULT_FILE_PATH):
         stock_data (dict): The dictionary holding stock information
         file_path (str): Path to the JSON file
     """
+    # Fix for 'consider-using-with' and 'unspecified-encoding'
     try:
         with open(file_path, "w", encoding="utf-8") as outfile:
             json.dump(stock_data, outfile, indent=4)
@@ -172,4 +176,19 @@ def main():
     print_data(stock_data)
 
     # pylint: disable=print-statement
-    print(f"
+    print(f"Apple stock: {get_qty('apple', stock_data)}")
+    
+    low_items = check_low_items(stock_data)
+    print(f"Low items: {low_items}")
+    logging.info(f"Low items: {low_models}")
+
+    save_data(stock_data)
+
+    # Fix for 'eval-used' (W0123) - Use literal_eval
+    expression = "'Safe eval substitute working'"
+    safe_output = literal_eval(expression)
+    print(safe_output)
+
+
+if __name__ == "__main__":
+    main()
